@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4ce4f10a-9452-4e87-94fb-10c6b51c5617" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file://$PROJECT_DIR$/../../../../Go" />
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../../../Go/src/encoding/json/encode.go" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2yd9m21kGcD65IwxmSRloHOSlXP" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Go Build.go build app-frame-work/demo/client (1).executor": "Debug",
+    "Go Build.go build app-frame-work/demo/client.executor": "Debug",
+    "Go Build.go build app-frame-work/registry.executor": "Debug",
+    "Go Build.go build gateway.go.executor": "Debug",
+    "Go Build.go build test.go.executor": "Debug",
+    "Go Test.TestBuildFrameAppContext in app-frame-work/app.executor": "Debug",
+    "Go Test.TestBuildFrameAppContextWithConfig in app-frame-work/app.executor": "Debug",
+    "Go Test.TestNewDefaultAppConfig in app-frame-work/config.executor": "Debug",
+    "Go Test.TestStart in app-frame-work/app.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "go.import.settings.migrated": "true",
+    "last_opened_file_path": "C:/Users/John/GolandProjects/app-frame-work/demo/biz",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "C:/Users/John/GolandProjects/app-frame-work/main.go",
+    "settings.editor.selected.configurable": "com.alibabacloud.intellij.config.RegionConfigurable"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\John\GolandProjects\app-frame-work\demo\biz" />
+      <recent name="C:\Users\John\GolandProjects\app-frame-work\demo\service" />
+      <recent name="C:\Users\John\GolandProjects\app-frame-work\registry\handler" />
+      <recent name="C:\Users\John\GolandProjects\app-frame-work\demo\client" />
+      <recent name="C:\Users\John\GolandProjects\app-frame-work\demo\myfilter" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\John\GolandProjects\app-frame-work\registry\client" />
+      <recent name="C:\Users\John\GolandProjects\app-frame-work\context" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Go Build.go build app-frame-work/demo/client (1)">
+    <configuration name="go build app-frame-work/demo/client (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
+      <module name="app-frame-work" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="app-frame-work/demo/client" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/demo/client/tcp_client.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build app-frame-work/demo/client" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="app-frame-work" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="app-frame-work/demo/client" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/demo/client/tcp_client.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build app-frame-work/registry" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="app-frame-work" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="app-frame-work/registry" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/registry/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build gateway.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="app-frame-work" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <package value="app-frame-work" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/demo/gateway/gateway.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestBuildFrameAppContextWithConfig in app-frame-work/app" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="app-frame-work" />
+      <working_directory value="$PROJECT_DIR$/app" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="app-frame-work/app" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestBuildFrameAppContextWithConfig\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestStart in app-frame-work/app" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="app-frame-work" />
+      <working_directory value="$PROJECT_DIR$/app" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="app-frame-work/app" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestStart\E$" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go Build.go build app-frame-work/registry" />
+      <item itemvalue="Go Build.go build app-frame-work/demo/client (1)" />
+      <item itemvalue="Go Build.go build app-frame-work/demo/client" />
+      <item itemvalue="Go Build.go build gateway.go" />
+      <item itemvalue="Go Test.TestBuildFrameAppContextWithConfig in app-frame-work/app" />
+      <item itemvalue="Go Test.TestStart in app-frame-work/app" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build gateway.go" />
+        <item itemvalue="Go Build.go build app-frame-work/registry" />
+        <item itemvalue="Go Build.go build app-frame-work/demo/client (1)" />
+        <item itemvalue="Go Build.go build app-frame-work/demo/client" />
+        <item itemvalue="Go Test.TestStart in app-frame-work/app" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-5df93f7ad4aa-df9ad98b711f-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-242.26775.26" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-GO-242.26775.26" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>
