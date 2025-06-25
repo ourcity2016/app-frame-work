@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4ce4f10a-9452-4e87-94fb-10c6b51c5617" name="Changes" comment="" />
+    <list default="true" id="4ce4f10a-9452-4e87-94fb-10c6b51c5617" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/biz/biz.go" beforeDir="false" afterPath="$PROJECT_DIR$/demo/biz/biz.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +21,9 @@
     </option>
   </component>
   <component name="GOROOT" url="file://$PROJECT_DIR$/../../../../Go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../../../../Go/src/encoding/json/encode.go" root0="SKIP_INSPECTION" />
   </component>
@@ -49,6 +55,7 @@
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "last_opened_file_path": "C:/Users/John/GolandProjects/app-frame-work/demo/biz",
     "node.js.detected.package.eslint": "true",
