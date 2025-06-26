@@ -55,7 +55,7 @@ func BuildFrameAppContext() FrameAppContext {
 	//------------------------------------------------------------------------------------
 	rpcSessionManager := appcontext.NewSessionManagerBuilder(false, &rpcClientHandler)
 	return FrameAppContext{
-		Config:                 config.NewDefaultAppConfig(),
+		Config:                 config.LoadAppConfig(),
 		ConnectionManager:      appcontext.NewSessionManagerBuilder(true, &messageHandler),
 		ClientSessionManager:   appcontext.NewSessionManagerBuilder(false, &rpcClientHandler),
 		RegistrySessionManager: appcontext.NewSessionManagerBuilder(false, &registryClientHandler),

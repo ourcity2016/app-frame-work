@@ -33,7 +33,7 @@ var (
 func BuildMyLogger() Logger {
 	once.Do(func() {
 		instance = &myLogger{
-			logger: log.New(os.Stdout, "", log.Ldate|log.Ltime),
+			logger: log.New(os.Stdout, "", log.Ldate|log.Ltime|log.Lmicroseconds),
 			skip:   3, // 根据实际调用栈调整
 			debug:  true,
 		}
