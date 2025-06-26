@@ -12,6 +12,7 @@ func main() {
 	//app.ConnectionManager.Handler = &hanlder.MyHandler{}
 	app.Config.Filters.AddFilter(&myfilter.LoginFilter{})
 	app.Config.AppName = "demo"
+	app.Config.ServiceDiscover.Registry.Enable = true
 	app.Config.IgnoreRouters = []string{app.Config.AppName + ".LoginServiceImpl.Login", app.Config.AppName + ".LoginServiceImpl.LoginOut"}
 	app.Register(app.Config.AppName, &service.LoginServiceImpl{})
 	//app.Register(app.Config.AppName, &service.RoomServiceImpl{})

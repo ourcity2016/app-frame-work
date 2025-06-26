@@ -22,6 +22,7 @@ type Logger interface {
 type myLogger struct {
 	logger *log.Logger
 	skip   int
+	debug  bool
 }
 
 var (
@@ -34,6 +35,7 @@ func BuildMyLogger() Logger {
 		instance = &myLogger{
 			logger: log.New(os.Stdout, "", log.Ldate|log.Ltime),
 			skip:   3, // 根据实际调用栈调整
+			debug:  true,
 		}
 	})
 	return instance
@@ -79,7 +81,9 @@ func (l *myLogger) Warn(format string, msg ...any) {
 }
 
 func (l *myLogger) Debug(format string, msg ...any) {
-	l.output("DEBUG", format, msg...)
+	if l.debug {
+		l.output("DEBUG", format, msg...)
+	}
 }
 
 func (l *myLogger) SetOutput(w io.Writer) {

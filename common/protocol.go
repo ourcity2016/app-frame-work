@@ -1,6 +1,8 @@
 package common
 
-import "context"
+import (
+	"context"
+)
 
 // 登录
 // {"cmd":"rpc","router":"demo.LoginServiceImpl.Login","params":"{\"name\":\"xxxxxx1\"}"}
@@ -14,6 +16,7 @@ import "context"
 // {"cmd":"rpc","router":"demo.RoomServiceImpl.Talk","params":"{\"toRoom\":\"xxxxxx\",\"message\":\"你好\"}"}
 // {"cmd":"rpc","router":"registry.RegistryServiceImpl.RegisterService","params":"{\"toRoom\":\"xxxxxx\",\"message\":\"你好\"}"}
 // {"cmd":"rpc","router":"registry.RegistryServiceImpl.GetFullService","params":"{\"toRoom\":\"xxxxxx\",\"message\":\"你好\"}"}
+// {"cmd":"rpc","router":"registry.RegistryServiceImpl.ServiceCheck","params":"{\"toRoom\":\"xxxxxx\",\"message\":\"你好\"}"}
 
 // {"cmd":"rpc","session_id":"","router":"registry.RegistryServiceImpl.RegisterService","params":"{\"methodName\":\"Test\",\"serviceName\":\"TestServiceImpl\",\"appName\":\"demo\",\"loadBalance\":\"round-robin\",\"servers\":{},\"status\":1}}
 const (
@@ -24,7 +27,8 @@ const (
 
 type Request struct {
 	Cmd         string            `json:"cmd"` //PING RPC
-	SessionID   string            `json:"session_id"`
+	SessionID   string            `json:"sessionId"`
+	RequestID   string            `json:"requestId"`
 	Router      string            `json:"router"`
 	Params      string            `json:"params"`
 	Ctx         context.Context   `json:"-"`

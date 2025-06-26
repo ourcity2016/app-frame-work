@@ -13,7 +13,7 @@ type RPC interface {
 
 	RPC(moduleName string, obj string, methodName string, params interface{}) (interface{}, error)
 
-	JSONRPC(moduleName string, obj string, methodName string, ctx context.Context, param string) (interface{}, error)
+	JSONRPC(moduleName string, obj string, methodName string, ctx context.Context, param string) (interface{}, bool, error)
 }
 
 var (
@@ -61,12 +61,13 @@ func (rc *ServiceContext) RPC(moduleName string, obj string, methodName string, 
 	return util.DynamicInvoke(rpcService, methodName, params)
 }
 
-func (rc *ServiceContext) JSONRPC(moduleName string, obj string, methodName string, ctx context.Context, param string) (interface{}, error) {
+func (rc *ServiceContext) JSONRPC(moduleName string, obj string, methodName string, ctx context.Context, param string) (interface{}, bool, error) {
 	rpcService, ok := GetFrom3LevelMap(moduleName, obj, methodName)
 	if !ok {
-		return nil, errors.New("not found service")
+		return nil, false, errors.New("not found service")
 	}
-	return util.JSONRPCWithCtx(rpcService, methodName, ctx, param)
+	result, err := util.JSONRPCWithCtx(rpcService, methodName, ctx, param)
+	return result, true, err
 }
 
 func GetFrom3LevelMap(moduleName string, obj string, methodName string) (interface{}, bool) {

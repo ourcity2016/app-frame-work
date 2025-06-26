@@ -18,7 +18,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 		conn := client.BuildNewConnClient()
-		conn.Conn("tcp", "127.0.0.1:8848", connectionManager, oscontext.Background())
+		conn.Conn("tcp", "127.0.0.1:8080", connectionManager, oscontext.Background())
 	}()
 	go func() {
 		defer wg.Done()

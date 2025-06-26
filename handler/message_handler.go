@@ -4,6 +4,7 @@ import (
 	"app-frame-work/adpter"
 	"app-frame-work/common"
 	"app-frame-work/logger"
+	"app-frame-work/sync"
 	"app-frame-work/util"
 	"encoding/json"
 	"errors"
@@ -19,15 +20,13 @@ type MessageHandler interface {
 	SendMessage(message string, c chan []byte) error
 	SendResponseMessage(response *common.Response, c chan []byte) error
 	SendRequestMessage(request *common.Request, c chan []byte) error
+	SendRequestSyncMessage(request *common.Request, c chan []byte) error
 }
 
 type MessageHandlerImpl struct {
 	Adapter adpter.AdapterImpl
 }
 
-func BuildMessageHandler() MessageHandler {
-	return &MessageHandlerImpl{}
-}
 func (hdl *MessageHandlerImpl) SendByteMessage(message []byte, c chan []byte) error {
 	select {
 	case c <- util.EncodeMessage(message):
@@ -51,7 +50,26 @@ func (hdl *MessageHandlerImpl) SendRequestMessage(request *common.Request, c cha
 	if err != nil {
 		return err
 	}
+	if request.RequestID == "" {
+		return errors.New("request id must be not null")
+	}
 	return hdl.SendByteMessage(dataByte, c)
+}
+
+func (hdl *MessageHandlerImpl) SendRequestSyncMessage(request *common.Request, c chan []byte) error {
+	dataByte, err := json.Marshal(request)
+	if err != nil {
+		return err
+	}
+	if request.RequestID == "" {
+		return errors.New("request id must be not null")
+	}
+	errRe := hdl.SendByteMessage(dataByte, c)
+	if errRe != nil {
+		return errRe
+	}
+	sync.RequestMessageCache.AddRequest(request)
+	return nil
 }
 
 // {cmd:"request",router:"",params:{}}

@@ -49,7 +49,15 @@ func NewSessionManagerBuilder(isServer bool, handler handler.MessageHandler) *Co
 		Handler:  handler,
 	}
 }
-
+func (s *Session) IgnoreFilters(requestRouter string) bool {
+	ignoreList := s.IgnoreRouters
+	for _, ignore := range ignoreList {
+		if ignore == requestRouter {
+			return true
+		}
+	}
+	return false
+}
 func (s *Session) readLoop() {
 	defer close(s.SendCh) // 关闭发送通道
 	for {
@@ -62,41 +70,57 @@ func (s *Session) readLoop() {
 			}
 			return
 		}
-		if s.IsServer {
-			request := common.Request{SessionID: s.ConnID, Ctx: s.Context}
-			request.OriginalMsg = string(msg)
-			errJson := json.Unmarshal([]byte(msg), &request)
-			if errJson != nil || request.Cmd == "" {
-				errRes := common.ERROR(nil, fmt.Sprintf("unkown command: %s", string(msg)))
-				errRes.Request = request
-				s.Handler.SendResponseMessage(errRes, s.SendCh)
-				continue
-			}
-			result, continued := s.Filters.Execute(&request)
-			if continued {
-				errInfo := s.Handler.HandlerRequestMessage(&request, s.SendCh)
-				if errInfo != nil {
-					continue
+		go func() {
+			if s.IsServer {
+				request := common.Request{SessionID: s.ConnID, Ctx: s.Context}
+				request.OriginalMsg = string(msg)
+				errJson := json.Unmarshal([]byte(msg), &request)
+				if request.RequestID == "" {
+					request.RequestID = util.UUID()
+				}
+				if errJson != nil || request.Cmd == "" {
+					errRes := common.ERROR(nil, fmt.Sprintf("unkown command: %s", string(msg)))
+					errRes.Request = request
+					err := s.Handler.SendResponseMessage(errRes, s.SendCh)
+					if err != nil {
+						return
+					}
+					return
+				}
+				ignoreFilter := s.IgnoreFilters(request.Router)
+				if ignoreFilter {
+					errInfo := s.Handler.HandlerRequestMessage(&request, s.SendCh)
+					if errInfo != nil {
+						return
+					}
+				} else {
+					result, continued := s.Filters.Execute(&request)
+					if continued {
+						errInfo := s.Handler.HandlerRequestMessage(&request, s.SendCh)
+						if errInfo != nil {
+							return
+						}
+					} else {
+						errInfo := s.Handler.SendResponseMessage(result, s.SendCh)
+						if errInfo != nil {
+							return
+						}
+					}
 				}
 			} else {
-				errInfo := s.Handler.SendResponseMessage(result, s.SendCh)
+				response := common.Response{}
+				errJson := json.Unmarshal([]byte(msg), &response)
+				if errJson != nil {
+					myLogger.Error("response msg error %s", string(msg))
+					return
+				}
+				myLogger.Debug("response from server: %s", string(msg))
+				errInfo := s.Handler.HandlerResponseMessage(&response, s.SendCh)
 				if errInfo != nil {
-					continue
+					return
 				}
 			}
-		} else {
-			response := common.Response{}
-			errJson := json.Unmarshal([]byte(msg), &response)
-			if errJson != nil {
-				myLogger.Error("response msg error %s", string(msg))
-				continue
-			}
-			myLogger.Warn("response from server: %s", string(msg))
-			errInfo := s.Handler.HandlerResponseMessage(&response, s.SendCh)
-			if errInfo != nil {
-				continue
-			}
-		}
+		}()
 	}
 }
 
@@ -110,21 +134,21 @@ func (s *Session) decodeMessage() ([]byte, error) {
 	// 更严格的大小限制检查
 	const maxMessageSize = 10 * 1024 * 1024
 	if length == 0 {
-		myLogger.Error("丢弃无效包数据")
+		myLogger.Debug("丢弃无效包数据")
 		return nil, nil
 	}
 	if length > maxMessageSize {
-		myLogger.Error("消息长度 %d 超过限制 %d", length, maxMessageSize)
+		myLogger.Debug("消息长度 %d 超过限制 %d", length, maxMessageSize)
 		return nil, nil
 	}
 	// 读取消息体
 	message := make([]byte, length)
 	if _, err := io.ReadFull(s.Reader, message); err != nil {
-		myLogger.Error("读取消息体失败: %w", err)
+		myLogger.Debug("读取消息体失败: %w", err)
 		return nil, nil
 	}
 	if len(message) <= 4 {
-		myLogger.Error("丢弃无效包数据: %s", string(message))
+		myLogger.Debug("丢弃无效包数据: %s", string(message))
 		return message, nil
 	}
 	return message[4:len(message)], nil
@@ -210,6 +234,17 @@ func (m *ConnectionManager) AddSession(session *Session) {
 	addr := session.Conn.RemoteAddr().String()
 	myLogger.Info("新客户端 %s 连接加入\n", addr)
 	m.Sessions[session.ConnID] = session
+}
+
+func (m *ConnectionManager) FindAnySession(serverAndPort string) *Session {
+	m.Lock()
+	defer m.Unlock()
+	for _, s := range m.Sessions {
+		if s.Conn.RemoteAddr().String() == serverAndPort {
+			return s
+		}
+	}
+	return nil
 }
 
 func (m *ConnectionManager) RemoveSession(connId string) {

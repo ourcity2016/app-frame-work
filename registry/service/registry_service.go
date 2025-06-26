@@ -21,9 +21,9 @@ type RegistryServiceImpl struct {
 }
 
 func (rst *RegistryServiceImpl) RegisterService(ctx context.Context, service *common.Service) error {
-	serviceMap := common.ServiceDiscover
-	serviceMap.RLock()
-	defer serviceMap.RUnlock()
+	serviceMap := &common.ServiceDiscover
+	serviceMap.Lock()
+	defer serviceMap.Unlock()
 	moduleName := service.AppName
 	// 初始化第一级
 	if _, ok := serviceMap.ServiceMap[moduleName]; !ok {
@@ -52,9 +52,9 @@ func (rst *RegistryServiceImpl) GetFullService(ctx context.Context, service *com
 }
 
 func (rst *RegistryServiceImpl) RemoveService(ctx context.Context, service *common.Service) error {
-	serviceMap := common.ServiceDiscover
-	serviceMap.RLock()
-	defer serviceMap.RUnlock()
+	serviceMap := &common.ServiceDiscover
+	serviceMap.Lock()
+	defer serviceMap.Unlock()
 	moduleName := service.AppName
 	if _, ok := serviceMap.ServiceMap[moduleName]; !ok {
 		return errors.New("module not exist")
@@ -68,6 +68,7 @@ func (rst *RegistryServiceImpl) RemoveService(ctx context.Context, service *comm
 	if serviceInfo == nil {
 		return errors.New("service impl not exist")
 	}
+	serviceMap.ServiceHash = util.UUID()
 	servers := serviceInfo.Servers
 	serverNeedRemove := service.Servers
 	if len(servers) > 0 && len(serverNeedRemove) > 0 {
@@ -77,10 +78,10 @@ func (rst *RegistryServiceImpl) RemoveService(ctx context.Context, service *comm
 	} else {
 		delete(serviceMap.ServiceMap[moduleName][serviceName], methodName)
 	}
-	serviceMap.ServiceHash = util.UUID()
 	return nil
 }
 
-func (rst *RegistryServiceImpl) ServiceCheck(ctx context.Context, serviceHash *common.Service) string {
-	return common.ServiceDiscover.ServiceHash
+func (rst *RegistryServiceImpl) ServiceCheck(ctx context.Context, service *common.Service) interface{} {
+	serviceMap := &common.ServiceDiscover
+	return common.ServiceMap{ServiceHash: serviceMap.ServiceHash}
 }

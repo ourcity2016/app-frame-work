@@ -6,10 +6,12 @@ import (
 
 var ServiceDiscover = *BuildNewServiceMap()
 
+//var LocalServiceCache = *BuildNewServiceMap()
+
 type ServiceMap struct {
-	ServiceMap   map[string]map[string]map[string]*Service `json:"serviceMap"`
-	ServiceHash  string                                    `json:"serviceHash"`
-	sync.RWMutex `json:"-"`
+	ServiceMap  map[string]map[string]map[string]*Service `json:"serviceMap"`
+	ServiceHash string                                    `json:"serviceHash"`
+	sync.Mutex
 }
 
 type Service struct {
@@ -28,5 +30,5 @@ type Server struct {
 }
 
 func BuildNewServiceMap() *ServiceMap {
-	return &ServiceMap{ServiceMap: make(map[string]map[string]map[string]*Service)}
+	return &ServiceMap{ServiceMap: make(map[string]map[string]map[string]*Service), ServiceHash: ""}
 }

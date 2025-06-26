@@ -2,6 +2,7 @@ package app
 
 import (
 	"app-frame-work/adpter"
+	client2 "app-frame-work/client"
 	fkcommon "app-frame-work/common"
 	"app-frame-work/config"
 	appcontext "app-frame-work/context"
@@ -18,7 +19,6 @@ import (
 )
 
 var myLogger = logger.BuildMyLogger()
-var consumerClientImpl = client.ConsumerClientImpl{}
 
 type App interface {
 	Start(appContext *FrameAppContext) error
@@ -28,22 +28,39 @@ type App interface {
 }
 
 type FrameAppContext struct {
-	Config               *config.AppConfig
-	Context              context.Context
-	ConnectionManager    *appcontext.ConnectionManager
-	ClientSessionManager *appcontext.ConnectionManager
+	Config                 *config.AppConfig
+	Context                context.Context
+	ConnectionManager      *appcontext.ConnectionManager
+	ClientSessionManager   *appcontext.ConnectionManager
+	RegistrySessionManager *appcontext.ConnectionManager
+	ConsumerClient         *client.ConsumerClientImpl
+	RemoteRPCClient        *client2.RemoteRPCImpl
 }
 
 func BuildFrameAppContext() FrameAppContext {
 	myLogger.Info("初始化Context")
 	defaultAdapter := adpter.AdapterImpl{AdapterCMD: fkcommon.RPC}
-	defaultAdapter.AddFilter(&defaultAdapter)
+	defaultAdapter.AddAdapter(&defaultAdapter)
 	messageHandler := handler.MessageHandlerImpl{Adapter: defaultAdapter}
-	connectionManager := appcontext.NewSessionManagerBuilder(true, &messageHandler)
+	//------------------------------------------------------------------------------------
+	defaultAdapterForRegistry := adpter.AdapterImpl{AdapterCMD: fkcommon.RPC}
+	defaultAdapterForRegistry.AddAdapter(&defaultAdapterForRegistry)
+	registryClientHandler := handler.RPCClientHandler{}
+	registryClientHandler.MessageHandlerImpl.Adapter = defaultAdapterForRegistry
+	//------------------------------------------------------------------------------------
+	defaultAdapterForRPC := adpter.AdapterImpl{AdapterCMD: fkcommon.RPC}
+	defaultAdapterForRPC.AddAdapter(&defaultAdapterForRPC)
+	rpcClientHandler := handler.RPCClientHandler{}
+	rpcClientHandler.MessageHandlerImpl.Adapter = defaultAdapterForRPC
+	//------------------------------------------------------------------------------------
+	rpcSessionManager := appcontext.NewSessionManagerBuilder(false, &rpcClientHandler)
 	return FrameAppContext{
-		Config:               config.NewDefaultAppConfig(),
-		ConnectionManager:    connectionManager,
-		ClientSessionManager: appcontext.NewSessionManagerBuilder(true, &messageHandler),
+		Config:                 config.NewDefaultAppConfig(),
+		ConnectionManager:      appcontext.NewSessionManagerBuilder(true, &messageHandler),
+		ClientSessionManager:   appcontext.NewSessionManagerBuilder(false, &rpcClientHandler),
+		RegistrySessionManager: appcontext.NewSessionManagerBuilder(false, &registryClientHandler),
+		ConsumerClient:         &client.ConsumerClientImpl{},
+		RemoteRPCClient:        &client2.RemoteRPCImpl{Ctx: context.Background(), ConnectionManager: rpcSessionManager, LocalServers: make(map[string]*common.Server)},
 	}
 }
 
@@ -58,7 +75,7 @@ func (app *FrameAppContext) Start(appContext *FrameAppContext) error {
 	appContext.Context = ctx
 	defer appContext.Context.Done()
 	var wg sync.WaitGroup
-	wg.Add(2)
+	wg.Add(3)
 	go func() {
 		defer wg.Done()
 		errorData := server.BuildNewTCPServer().Listen(appContext.Config, appContext.ConnectionManager, ctx)
@@ -68,10 +85,14 @@ func (app *FrameAppContext) Start(appContext *FrameAppContext) error {
 	}()
 	go func() {
 		defer wg.Done()
-		err := consumerClientImpl.InitRegistry(appContext.Config)
+		err := appContext.ConsumerClient.InitRegistry(appContext.Config, appContext.RegistrySessionManager)
 		if err != nil {
 			return
 		}
+	}()
+	go func() {
+		defer wg.Done()
+		appContext.RemoteRPCClient.StartRPCClient()
 	}()
 	wg.Wait()
 	return nil
@@ -86,6 +107,10 @@ func (app *FrameAppContext) Register(moduleName string, obj interface{}) error {
 	return service.Register(moduleName, obj)
 }
 func (app *FrameAppContext) RegisterRemote(moduleName string, obj interface{}) error {
+	err := app.Register(moduleName, obj)
+	if err != nil {
+		return err
+	}
 	t := reflect.TypeOf(obj)
 	objName := t.Elem().Name()
 	bindAddr := app.Config.ServerConfig.BindAddr
@@ -97,8 +122,8 @@ func (app *FrameAppContext) RegisterRemote(moduleName string, obj interface{}) e
 	for i := 0; i < t.NumMethod(); i++ {
 		method := t.Method(i)
 		service := common.Service{AppName: moduleName, ServiceName: objName, MethodName: method.Name, LoadBalance: "round-robin", Status: 1, Servers: serverMap}
-		myLogger.Info("register remote service %v", service)
-		err := consumerClientImpl.RegisterService(&service)
+		myLogger.Info("register remote service %v", &service)
+		err := app.ConsumerClient.RegisterService(&service)
 		if err != nil {
 			myLogger.Error(err.Error())
 			return err
