@@ -5,15 +5,15 @@ import (
 )
 
 // 登录
-// {"cmd":"rpc","router":"demo.LoginServiceImpl.Login","params":"{\"name\":\"xxxxxx1\"}"}
+// {"cmd":"rpc","router":"gateway.LoginServiceImpl.Login","params":"{\"name\":\"xxxxxx1\"}"}
 // 注销登录
-// {"cmd":"rpc","router":"demo.LoginServiceImpl.LoginOut","params":"{\"name\":\"xxxxxx\"}"}
+// {"cmd":"rpc","router":"gateway.LoginServiceImpl.LoginOut","params":"{\"name\":\"xxxxxx\"}"}
 // 加入房间
-// {"cmd":"rpc","router":"demo.RoomServiceImpl.JoinRoom","params":"{\"roomId\":\"aa414d89-d2e9-eef7-18d9-4351bdd68516\"}"}
+// {"cmd":"rpc","router":"chat-biz.RoomServiceImpl.JoinRoom","params":"{\"roomId\":\"aa414d89-d2e9-eef7-18d9-4351bdd68516\"}"}
 // 创建房间
-// {"cmd":"rpc","router":"demo.RoomServiceImpl.CreateRoom","params":"{\"roomName\":\"xxxxxx\"}"}
+// {"cmd":"rpc","router":"chat-biz.RoomServiceImpl.CreateRoom","params":"{\"roomName\":\"xxxxxx\"}"}
 // Talk
-// {"cmd":"rpc","router":"demo.RoomServiceImpl.Talk","params":"{\"toRoom\":\"xxxxxx\",\"message\":\"你好\"}"}
+// {"cmd":"rpc","router":"chat-biz.RoomServiceImpl.Talk","params":"{\"toRoom\":\"xxxxxx\",\"message\":\"你好\"}"}
 // {"cmd":"rpc","router":"registry.RegistryServiceImpl.RegisterService","params":"{\"toRoom\":\"xxxxxx\",\"message\":\"你好\"}"}
 // {"cmd":"rpc","router":"registry.RegistryServiceImpl.GetFullService","params":"{\"toRoom\":\"xxxxxx\",\"message\":\"你好\"}"}
 // {"cmd":"rpc","router":"registry.RegistryServiceImpl.ServiceCheck","params":"{\"toRoom\":\"xxxxxx\",\"message\":\"你好\"}"}
