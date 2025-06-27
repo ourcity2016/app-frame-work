@@ -97,7 +97,7 @@ func (rr *RemoteRPCImpl) RemoteRPC(req *common.Request) (interface{}, bool, erro
 		session := rr.ConnectionManager.FindAnySession(sv.Ip + ":" + sv.Port)
 		if session == nil {
 			rr.ServerHasChange = true
-			rr.LocalServers[sv.Ip+sv.Port] = &sv
+			rr.LocalServers[sv.Ip+":"+sv.Port] = &sv
 			getSession, err := rr.GetSession(context.WithoutCancel(rr.Ctx), &sv, time.Second*5)
 			if err != nil {
 				return nil, false, err

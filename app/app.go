@@ -13,8 +13,6 @@ import (
 	"app-frame-work/rpc"
 	"app-frame-work/server"
 	"context"
-	"reflect"
-	"strings"
 	"sync"
 )
 
@@ -111,23 +109,9 @@ func (app *FrameAppContext) RegisterRemote(moduleName string, obj interface{}) e
 	if err != nil {
 		return err
 	}
-	t := reflect.TypeOf(obj)
-	objName := t.Elem().Name()
-	bindAddr := app.Config.ServerConfig.BindAddr
-	parts := strings.Split(bindAddr, ":")
-	serverInfo := common.Server{Status: 1, Ip: parts[0], Port: parts[1]}
-	serverMap := make(map[string]common.Server, 1)
-	serverMap[serverInfo.Ip+serverInfo.Port] = serverInfo
-	// 遍历所有方法
-	for i := 0; i < t.NumMethod(); i++ {
-		method := t.Method(i)
-		service := common.Service{AppName: moduleName, ServiceName: objName, MethodName: method.Name, LoadBalance: "round-robin", Status: 1, Servers: serverMap}
-		myLogger.Info("register remote service %v", &service)
-		err := app.ConsumerClient.RegisterService(&service)
-		if err != nil {
-			myLogger.Error(err.Error())
-			return err
-		}
+	err = app.ConsumerClient.RegisterRemoteService(moduleName, app.Config.ServerConfig.BindAddr, obj)
+	if err != nil {
+		return err
 	}
 	return nil
 }

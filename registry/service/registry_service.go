@@ -38,7 +38,7 @@ func (rst *RegistryServiceImpl) RegisterService(ctx context.Context, service *co
 	serviceInfo, ok := serviceMap.ServiceMap[moduleName][serviceName][methodName]
 	if ok {
 		for _, serversData := range service.Servers {
-			serviceInfo.Servers[serversData.Ip+serversData.Port] = serversData
+			serviceInfo.Servers[serversData.Ip+":"+serversData.Port] = serversData
 		}
 	} else {
 		serviceMap.ServiceMap[moduleName][serviceName][methodName] = service
@@ -73,7 +73,7 @@ func (rst *RegistryServiceImpl) RemoveService(ctx context.Context, service *comm
 	serverNeedRemove := service.Servers
 	if len(servers) > 0 && len(serverNeedRemove) > 0 {
 		for _, serversData := range serverNeedRemove {
-			delete(servers, serversData.Ip+serversData.Port)
+			delete(servers, serversData.Ip+":"+serversData.Port)
 		}
 	} else {
 		delete(serviceMap.ServiceMap[moduleName][serviceName], methodName)

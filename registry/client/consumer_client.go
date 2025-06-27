@@ -11,6 +11,8 @@ import (
 	"app-frame-work/util"
 	"context"
 	"encoding/json"
+	"reflect"
+	"strings"
 	"time"
 )
 
@@ -20,6 +22,7 @@ type ConsumerClient interface {
 	InitRegistry(*config.AppConfig, *fkcontext.ConnectionManager) error
 	CheckConnectManagerReady() bool
 	RegisterService(*common.Service) error
+	RegisterRemoteService(moduleName string, bindAddr string, obj interface{}) error
 	PullService(*common.Service) (*common.ServiceMap, error)
 	CheckService() (*common.ServiceMap, error)
 	MonitorService() error
@@ -162,4 +165,29 @@ func (cc *ConsumerClientImpl) CheckConnectManagerReady() bool {
 		}
 	}
 	return false
+}
+
+func (cc *ConsumerClientImpl) RegisterRemoteService(moduleName string, bindAddr string, obj interface{}) error {
+	t := reflect.TypeOf(obj)
+	objName := t.Elem().Name()
+	ipString, err := util.GetLocalIP()
+	if err != nil {
+		return err
+	}
+	parts := strings.Split(bindAddr, ":")
+	serverInfo := common.Server{Status: 1, Ip: ipString, Port: parts[1]}
+	serverMap := make(map[string]common.Server, 1)
+	serverMap[serverInfo.Ip+":"+serverInfo.Port] = serverInfo
+	// 遍历所有方法
+	for i := 0; i < t.NumMethod(); i++ {
+		method := t.Method(i)
+		service := common.Service{AppName: moduleName, ServiceName: objName, MethodName: method.Name, LoadBalance: "round-robin", Status: 1, Servers: serverMap}
+		myLogger.Info("register remote service %v", &service)
+		err := cc.RegisterService(&service)
+		if err != nil {
+			myLogger.Error(err.Error())
+			return err
+		}
+	}
+	return nil
 }
